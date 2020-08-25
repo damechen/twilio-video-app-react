@@ -1,9 +1,13 @@
 import React, { ChangeEvent, FormEvent, useState, useEffect } from 'react';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
+import { Modal } from 'react-bootstrap';
 import { useAppState } from '../../state';
 import { useParams } from 'react-router-dom';
-import useRoomState from '../../hooks/useRoomState/useRoomState';
+import firebase from 'firebase/app';
+import 'firebase/auth';
+import 'firebase/database';
 import useVideoContext from '../../hooks/useVideoContext/useVideoContext';
+import LoginModal from '../LoginModal/LoginModal';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -47,19 +51,43 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-export default function Lobby() {
+function onAuthStateChange(callback: any) {
+  return firebase.auth().onAuthStateChanged(async user => {
+    if (user) {
+      await firebase
+        .database()
+        .ref('users')
+        .child(user.uid)
+        .on('value', snapshot => {
+          callback(snapshot.val());
+        });
+    } else {
+      callback(null);
+    }
+  });
+}
+
+function Lobby() {
   const classes = useStyles();
   const { URLRoomName } = useParams();
   const { user, getToken, isFetching } = useAppState();
   const { isConnecting, connect, isAcquiringLocalTracks } = useVideoContext();
-
   const [meetupID, setMeetupID] = useState<string>('');
+  const [currentUser, setCurrentUser] = useState(null);
+  const [showLogin, setShowLogin] = useState(false);
 
   useEffect(() => {
     if (URLRoomName) {
       setMeetupID(URLRoomName);
     }
   }, [URLRoomName]);
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChange(setCurrentUser);
+    return () => {
+      unsubscribe();
+    };
+  }, []);
 
   const handleMeetupIDChange = (event: ChangeEvent<HTMLInputElement>) => {
     setMeetupID(event.target.value);
@@ -76,6 +104,11 @@ export default function Lobby() {
 
   return (
     <div className="bg-white flex" style={{ minHeight: '94.2vh' }}>
+      <Modal show={showLogin} onHide={() => setShowLogin(false)} centered size="lg">
+        <Modal.Body style={{ padding: 0 }}>
+          <LoginModal isLogin={true} setShowLogin={setShowLogin} />
+        </Modal.Body>
+      </Modal>
       <div className="flex-1 flex flex-col justify-center py-12 px-24 sm:px-6 lg:flex-none lg:px-20">
         <div className="mx-auto w-full max-w-sm lg:w-96">
           <div>
@@ -93,6 +126,7 @@ export default function Lobby() {
                       type="meetupID"
                       required
                       value={meetupID}
+                      disabled={currentUser ? false : true}
                       onChange={handleMeetupIDChange}
                       className="text-gray-900 appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md placeholder-gray-400 focus:outline-none focus:shadow-outline-blue focus:border-blue-300 transition duration-150 ease-in-out text-lg font-medium sm:text-sm sm:leading-5"
                     />
@@ -101,16 +135,28 @@ export default function Lobby() {
 
                 <div>
                   <span className="block w-full rounded-md shadow-sm">
-                    <button
-                      type="submit"
-                      className="w-full flex justify-center py-2 px-4 border border-transparent text-lg font-bold rounded-md text-white bg-red-600 hover:bg-red-500 focus:outline-none focus:border-red-700 focus:shadow-outline-red active:bg-red-700 transition duration-150 ease-in-out"
-                      disabled={isAcquiringLocalTracks || isConnecting || !meetupID || isFetching}
-                    >
-                      Join now
-                    </button>
+                    {currentUser && (
+                      <button
+                        type="submit"
+                        className="w-full flex justify-center py-2 px-4 border border-transparent text-lg font-bold rounded-md text-white bg-red-600 hover:bg-red-500 focus:outline-none focus:border-red-700 focus:shadow-outline-red active:bg-red-700 transition duration-150 ease-in-out"
+                        disabled={isAcquiringLocalTracks || isConnecting || !meetupID || isFetching}
+                      >
+                        Join now
+                      </button>
+                    )}
                   </span>
                 </div>
               </form>
+              {!currentUser && (
+                <button
+                  onClick={() => {
+                    setShowLogin(true);
+                  }}
+                  className="w-full flex justify-center py-2 px-4 border border-transparent text-lg font-bold rounded-md text-white bg-red-600 hover:bg-red-500 focus:outline-none focus:border-red-700 focus:shadow-outline-red active:bg-red-700 transition duration-150 ease-in-out"
+                >
+                  Log in first
+                </button>
+              )}
             </div>
           </div>
         </div>
@@ -125,3 +171,5 @@ export default function Lobby() {
     </div>
   );
 }
+
+export default Lobby;
