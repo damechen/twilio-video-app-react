@@ -1,8 +1,10 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import { styled } from '@material-ui/core/styles';
 
+import Topbar from './components/Topbar/Topbar';
 import Controls from './components/Controls/Controls';
 import LocalVideoPreview from './components/LocalVideoPreview/LocalVideoPreview';
+import Lobby from './components/Lobby/Lobby';
 import MenuBar from './components/MenuBar/MenuBar';
 import ReconnectingNotification from './components/ReconnectingNotification/ReconnectingNotification';
 import Room from './components/Room/Room';
@@ -13,6 +15,7 @@ import useRoomState from './hooks/useRoomState/useRoomState';
 const Container = styled('div')({
   display: 'grid',
   gridTemplateRows: 'auto 1fr',
+  minHeight: '90vh',
 });
 
 const Main = styled('main')({
@@ -30,13 +33,23 @@ export default function App() {
   const height = useHeight();
 
   return (
-    <Container style={{ height }}>
-      <MenuBar />
-      <Main>
-        {roomState === 'disconnected' ? <LocalVideoPreview /> : <Room />}
-        <Controls />
-      </Main>
-      <ReconnectingNotification />
-    </Container>
+    <Fragment>
+      <Topbar />
+      <Container style={{ height }}>
+        {roomState === 'disconnected' ? (
+          <Lobby />
+        ) : (
+          <>
+            <MenuBar />
+            <Main>
+              <Room />
+              <Controls />
+            </Main>
+          </>
+        )}
+
+        <ReconnectingNotification />
+      </Container>
+    </Fragment>
   );
 }

@@ -137,7 +137,6 @@ export default function MenuBar() {
           <FlipCameraButton />
           <LocalAudioLevelIndicator />
           <ToggleFullscreenButton />
-          <Menu />
         </div>
       </Toolbar>
     </AppBar>
