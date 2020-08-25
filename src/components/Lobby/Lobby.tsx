@@ -2,7 +2,7 @@ import React from 'react';
 
 const Lobby = () => {
   return (
-    <div className="h-screen bg-white flex">
+    <div className="bg-white flex" style={{ minHeight: '94.2vh' }}>
       <div className="flex-1 flex flex-col justify-center py-12 px-4 sm:px-6 lg:flex-none lg:px-20 xl:px-40">
         <div className="mx-auto w-full max-w-sm lg:w-auto">
           <div>

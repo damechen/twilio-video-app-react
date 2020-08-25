@@ -15,7 +15,6 @@ import useRoomState from './hooks/useRoomState/useRoomState';
 const Container = styled('div')({
   display: 'grid',
   gridTemplateRows: 'auto 1fr',
-  minHeight: '90vh',
 });
 
 const Main = styled('main')({
@@ -32,24 +31,20 @@ export default function App() {
   // will look good on mobile browsers even after the location bar opens or closes.
   const height = useHeight();
 
-  return (
-    <Fragment>
+  return roomState === 'disconnected' ? (
+    <div className="h-screen bg-white relative">
       <Topbar />
-      <Container style={{ height }}>
-        {roomState === 'disconnected' ? (
-          <Lobby />
-        ) : (
-          <>
-            <MenuBar />
-            <Main>
-              <Room />
-              <Controls />
-            </Main>
-          </>
-        )}
+      <Lobby />
+    </div>
+  ) : (
+    <Container style={{ height }}>
+      <MenuBar />
+      <Main>
+        <Room />
+        <Controls />
+      </Main>
 
-        <ReconnectingNotification />
-      </Container>
-    </Fragment>
+      <ReconnectingNotification />
+    </Container>
   );
 }
