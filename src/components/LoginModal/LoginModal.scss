@@ -1,0 +1,122 @@
+@import '~bootstrap/scss/bootstrap';
+
+.wrapper {
+  height: 100%;
+  display: flex;
+  .content {
+    width: 100%;
+    max-width: 900px;
+    margin: auto;
+    background-color: #fff;
+    position: relative;
+    .aside {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background: rgb(238, 174, 202);
+      background: radial-gradient(circle, rgba(238, 174, 202, 1) 0%, rgba(148, 187, 233, 1) 100%);
+      .subtitle {
+        font-size: 18px;
+      }
+      .list {
+        padding-left: 0;
+        -webkit-column-count: 1;
+        -moz-column-count: 1;
+        column-count: 1;
+        font-size: 16px;
+        .icon {
+          width: auto;
+          height: 30px;
+          margin-right: 8px;
+          img {
+            height: 100%;
+            width: auto;
+            object-fit: contain;
+          }
+        }
+      }
+      a {
+        text-decoration: underline;
+        &:hover {
+          text-decoration: none;
+        }
+      }
+    }
+  }
+  .form-sign {
+    position: relative;
+    width: 100%;
+    max-width: 500px;
+    margin: auto;
+    label {
+      font-weight: 600;
+    }
+    .form-check label {
+      font-weight: 400;
+      font-size: 0.85rem;
+    }
+    input::placeholder,
+    input::-webkit-input-placeholder {
+      font-size: 0.85rem;
+    }
+    .form-toggle {
+      position: absolute;
+      top: 0;
+      right: 0;
+    }
+    .divider {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      &::before,
+      &::after {
+        content: '';
+        position: absolute;
+        background-color: #ccc;
+        height: 1px;
+        width: 42%;
+      }
+      &::before {
+        left: 0;
+      }
+      &::after {
+        right: 0;
+      }
+    }
+    .btn-social {
+      width: 39px;
+      height: 39px;
+      border: none !important;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      img {
+        width: 18px;
+        height: 18px;
+        object-fit: contain;
+      }
+    }
+    .btn-social:hover {
+      background-color: rgb(235, 235, 235) !important;
+    }
+    .btn-image-wrap {
+      color: #fff;
+      font-size: 0.9rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      .btn-image {
+        width: 16px;
+        margin-right: 10px;
+      }
+    }
+    .btn-lg,
+    .btn-group-lg > .btn {
+      height: 39px;
+      padding: 0.5rem 1rem;
+      font-size: 1rem;
+    }
+  }
+}

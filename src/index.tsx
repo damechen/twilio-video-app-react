@@ -1,6 +1,9 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 
+import firebase from 'firebase/app';
+import 'firebase/analytics';
+
 import { CssBaseline } from '@material-ui/core';
 import { MuiThemeProvider } from '@material-ui/core/styles';
 
@@ -29,6 +32,20 @@ const VideoApp = () => {
     </UnsupportedBrowserWarning>
   );
 };
+
+var firebaseConfig = {
+  apiKey: 'AIzaSyA5AshmLFeonS9iui9ldNKA0Mcha6wrPpE',
+  authDomain: 'lonely-dev.firebaseapp.com',
+  databaseURL: 'https://lonely-dev.firebaseio.com',
+  projectId: 'lonely-dev',
+  storageBucket: 'lonely-dev.appspot.com',
+  messagingSenderId: '892358178598',
+  appId: '1:892358178598:web:76820dbb68bfa2cc75f3e7',
+  measurementId: 'G-3P3PYFWC5C',
+};
+// Initialize Firebase
+firebase.initializeApp(firebaseConfig);
+firebase.analytics();
 
 ReactDOM.render(
   <MuiThemeProvider theme={theme}>
